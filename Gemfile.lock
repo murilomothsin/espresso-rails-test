@@ -77,7 +77,6 @@ GEM
       railties (>= 5.0.0)
     ffaker (2.21.0)
     ffi (1.17.0)
-    ffi (1.17.0-x86_64-linux)
     globalid (1.1.0)
       activesupport (>= 5.0)
     i18n (1.14.5)
