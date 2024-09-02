@@ -7,7 +7,7 @@ class User < ApplicationRecord
   belongs_to :company
   has_many :cards, dependent: :nullify
   has_many :statements, through: :cards
-  validates :email, presence: true, uniqueness: true
+  validates :email, presence: true
   validates :password, confirmation: true
 
   before_save { self.email = email.downcase }
