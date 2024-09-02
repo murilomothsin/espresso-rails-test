@@ -15,7 +15,6 @@ export default function EditUserModal(props) {
   }, [props.user]);
 
   const submit = () => {
-    console.log(props.user.id, name, email)
     fetch(`/users/${props.user.id}`, {
       method: "PUT",
       headers: {
@@ -31,7 +30,6 @@ export default function EditUserModal(props) {
     })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       props.handleClose()
     })
   }

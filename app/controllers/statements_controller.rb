@@ -3,7 +3,12 @@ class StatementsController < ApplicationController
 
   def index
     @categories = current_company.categories
-    @statements = ApplicationController.render(template: 'statements/statements', assigns: { statements: current_company.statements })
+    if current_user.admin?
+      statements_available = current_company.statements
+    else
+      statements_available = current_user.statements
+    end
+    @statements = ApplicationController.render(template: 'statements/statements', assigns: { statements: statements_available })
     respond_to do |format|
       format.html { render :index }
       format.json { render json: @statements, status: :ok }

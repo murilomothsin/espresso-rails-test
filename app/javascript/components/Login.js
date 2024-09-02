@@ -18,7 +18,6 @@ const Login = (props) => {
   }
 
   const submit = () => {
-    console.log(name)
     fetch("/login", {
       method: "POST",
       headers: {

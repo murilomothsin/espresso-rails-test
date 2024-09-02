@@ -41,7 +41,6 @@ export default function FormCardModal(props) {
     })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       props.handleClose()
     })
   }

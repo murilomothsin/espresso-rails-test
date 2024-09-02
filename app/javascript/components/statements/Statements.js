@@ -5,7 +5,6 @@ import ListStatementsAdmin from './ListStatementsAdmin'
 import ListStatements from './ListStatements'
 
 const Statements = (props) => {
-  console.log(props)
   let list = null
   if(props.current_user.role === "admin") {
     list = <ListStatementsAdmin statements={JSON.parse(props.statements)} />

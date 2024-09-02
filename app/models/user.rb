@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_secure_password
   belongs_to :company
   has_many :cards
+  has_many :statements, through: :cards
   validates :email, presence: true, uniqueness: true
   validates_confirmation_of :password
 

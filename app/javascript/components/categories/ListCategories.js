@@ -20,7 +20,6 @@ export default function ListCategories(props) {
     fetch("/categories.json", { method: "GET" })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       setCategories(data)
     })
   }

@@ -14,8 +14,6 @@ export default function FormStatementModal(props) {
   const [categoryId, setCategoryId] = useState(props.statement.category_id)
 
   const submit = () => {
-    console.log(file)
-
     const formData = new FormData()
     formData.append('statement[category_id]', categoryId)
     if(file != null) {
@@ -28,7 +26,6 @@ export default function FormStatementModal(props) {
     })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       props.handleClose()
     })
   }

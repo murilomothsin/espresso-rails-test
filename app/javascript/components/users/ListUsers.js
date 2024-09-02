@@ -29,7 +29,6 @@ export default function ListUsers(props) {
     fetch("/users.json", { method: "GET" })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       setUsers(data)
     })
   }

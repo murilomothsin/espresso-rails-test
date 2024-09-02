@@ -34,7 +34,6 @@ const NewUser = () => {
     })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
     })
   }
 

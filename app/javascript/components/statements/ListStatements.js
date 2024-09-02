@@ -1,11 +1,5 @@
 import React, { useState, useEffect }  from 'react';
 import Box from '@mui/material/Box';
-import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import EditIcon from '@mui/icons-material/Edit';
@@ -83,7 +77,7 @@ export default function ListStatements(props) {
       valueGetter: (value, row) => row.card.last4,
     },
     {
-      field: 'archived',
+      field: 'attachment',
       headerName: 'Comprovação',
       width: 150,
       renderCell: (params) => (
@@ -122,16 +116,8 @@ export default function ListStatements(props) {
   ];
 
   const edit = (statement) => {
-    console.log(statement)
     setStatement(statement)
     handleOpen()
-    // fetch(`/statements/${statement.id}/archive`, {
-    //   method: 'PUT',
-    // })
-    // .then(T => T.json())
-    // .then(data => {
-    //   loadStatements()
-    // })
   }
 
   const loadStatements = () => {

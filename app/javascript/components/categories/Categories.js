@@ -4,7 +4,6 @@ import Layout from '../Layout';
 import ListCategories from './ListCategories';
 
 const Categories = (props) => {
-  console.log(props)
   return (
     <Layout user={props.current_user}>
       <ListCategories categories={props.categories} />

@@ -22,7 +22,6 @@ export default function ListCards(props) {
     fetch("/cards.json", { method: "GET" })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       setCards(data.cards)
       setUsers(data.users)
     })

@@ -1,11 +1,5 @@
 import React, { useState, useEffect }  from 'react';
 import Box from '@mui/material/Box';
-import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import ArchiveIcon from '@mui/icons-material/Archive';
@@ -13,6 +7,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import IconButton from '@mui/material/IconButton';
 import { DataGrid } from '@mui/x-data-grid';
+import Chip from '@mui/material/Chip';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -38,37 +33,6 @@ export default function ListStatementsAdmin(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const listCards = () => {
-    if(cards.length == 0) {
-      return (
-        <React.Fragment>
-          <ListItem>
-            <ListItemText primary={"Até o momento, não há cartões cadastrados."} />
-            <Divider component="div" role="presentation" />
-          </ListItem>
-          <Divider component="li" style={{width:'100%'}} />
-        </React.Fragment>
-      )
-    }
-
-    return (
-      cards.map((card) => (
-        <React.Fragment key={card.id}>
-          <ListItem >
-            <ListItemAvatar>
-              <Avatar>
-                <CreditCardIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary={users.find((user) => user.id === card.user_id).name} secondary={`**** **** **** ${card.last4}`} />
-            <Button variant="outlined" onClick={() => handlecardUser(card)}>Editar</Button>
-          </ListItem>
-          <Divider component="li" style={{width:'100%'}} />
-        </React.Fragment>
-      ))
-    )
-  }
 
   const ContainerBoxStyles = {
     display: "flex",
@@ -102,7 +66,16 @@ export default function ListStatementsAdmin(props) {
       width: 70,
       valueGetter: (value, row) => row.card.last4,
     },
-    { field: 'archived', headerName: 'Comprovação', width: 130 },
+    {
+      field: 'attachment',
+      headerName: 'Comprovação',
+      width: 150,
+      renderCell: (params) => (
+        params.row.has_attachment ?
+        (<Chip label="Comprovada" color="success" />) :
+        (<Chip label="Não comprovada" />)
+      ),
+    },
     {
       field: 'user',
       headerName: 'Funcionário',
@@ -133,8 +106,6 @@ export default function ListStatementsAdmin(props) {
   ];
 
   const archive = (statement) => {
-    console.log("archive")
-    console.log(statement)
     fetch(`/statements/${statement.id}/archive`, {
       method: 'PUT',
     })

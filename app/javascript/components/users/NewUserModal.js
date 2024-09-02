@@ -10,8 +10,6 @@ export default function NewUserModal(props) {
   const [email, setEmail] = useState("")
 
   const submit = () => {
-    console.log(name, email)
-
     fetch("/users", {
       method: "POST",
       headers: {
@@ -27,7 +25,6 @@ export default function NewUserModal(props) {
     })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       props.handleClose()
     })
   }

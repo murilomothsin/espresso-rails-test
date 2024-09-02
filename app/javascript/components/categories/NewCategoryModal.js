@@ -9,8 +9,6 @@ export default function NewCategoryModal(props) {
   const [name, setName] = useState("")
 
   const submit = () => {
-    console.log(name)
-
     fetch("/categories", {
       method: "POST",
       headers: {
@@ -25,7 +23,6 @@ export default function NewCategoryModal(props) {
     })
     .then(T => T.json())
     .then(data => {
-      console.log(data)
       props.handleClose()
     })
   }
