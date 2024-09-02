@@ -1,14 +1,13 @@
+# frozen_string_literal: true
+
 class StatementsController < ApplicationController
-  before_action :authorize, only: [:index, :update, :archive]
+  before_action :authorize, only: %i[index update archive]
 
   def index
     @categories = current_company.categories
-    if current_user.admin?
-      statements_available = current_company.statements
-    else
-      statements_available = current_user.statements
-    end
-    @statements = ApplicationController.render(template: 'statements/statements', assigns: { statements: statements_available })
+    statements_available = current_user.admin? ? current_company.statements : current_user.statements
+    @statements = ApplicationController.render(template: 'statements/statements',
+                                               assigns: { statements: statements_available })
     respond_to do |format|
       format.html { render :index }
       format.json { render json: @statements, status: :ok }
@@ -24,7 +23,7 @@ class StatementsController < ApplicationController
     if @statement.save
       render json: { data: @statement }, status: :created
     else
-      render json: { errors:  @statement.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -33,7 +32,7 @@ class StatementsController < ApplicationController
     if @statement.update(archived: true)
       render json: { data: @statement }, status: :created
     else
-      render json: { errors:  @statement.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -42,11 +41,12 @@ class StatementsController < ApplicationController
     if @statement.update(statement_update_params)
       render json: { data: @statement }, status: :created
     else
-      render json: { errors:  @statement.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   private
+
   def statement_params
     params.permit(:merchant, :cost, :transaction_id)
   end

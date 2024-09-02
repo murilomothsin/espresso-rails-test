@@ -14,11 +14,12 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize
-    return redirect_to login_path, alert: 'You must be logged in to access this page.' if  current_user.nil?
+    return redirect_to login_path if current_user.nil?
+
     allowed_controllers = ['statements']
-    if current_user.user?
-      redirect_to login_path, alert: 'Sem permissão.' if !allowed_controllers.include?(params[:controller])
-      redirect_to login_path, alert: 'Sem permissão.' if (params[:action] == 'archive')
-    end
+    return unless current_user.user?
+
+    redirect_to login_path unless allowed_controllers.include?(params[:controller])
+    redirect_to login_path if params[:action] == 'archive'
   end
 end

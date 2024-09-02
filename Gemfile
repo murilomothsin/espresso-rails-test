@@ -49,9 +49,9 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
 
   # Use rspec-rails for testing
-  gem 'rspec-rails', '~> 5.1', '>= 5.1.2'
   gem 'factory_bot_rails'
-  gem "ffaker", "~> 2.21"
+  gem 'ffaker', '~> 2.21'
+  gem 'rspec-rails', '~> 5.1', '>= 5.1.2'
 end
 
 group :development do

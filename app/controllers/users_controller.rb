@@ -1,29 +1,7 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  before_action :authorize, only: [:index, :update]
-
-  def new
-  end
-
-  def create
-    ActiveRecord::Base.transaction do
-      if params[:company].blank? && current_company.present?
-        @company = current_user.company
-        role = :user
-      else
-        @company = Company.new(company_params)
-        role = :admin
-      end
-      @user = @company.users.new(user_params)
-      @user.role = role
-      @user.email.downcase!
-
-      if @company.save && @user.save
-        render json: { data: @user }, status: :created
-      else
-        render json: { errors: { user: @user.errors.full_messages, company: @company.errors.full_messages} }, status: :unprocessable_entity
-      end
-    end
-  end
+  before_action :authorize, only: %i[index update]
 
   def index
     @users = current_company.users
@@ -33,16 +11,41 @@ class UsersController < ApplicationController
     end
   end
 
+  def new; end
+
+  def create
+    ActiveRecord::Base.transaction do
+      build_company
+      @user = @company.users.new(user_params.merge(role: @role))
+      if @company.save && @user.save
+        render json: { data: @user }, status: :created
+      else
+        render json: { errors: { user: @user.errors.full_messages, company: @company.errors.full_messages } },
+               status: :unprocessable_entity
+      end
+    end
+  end
+
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
       render json: { data: @user }, status: :created
     else
-      render json: { errors:  @user.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   private
+
+  def build_company
+    if params[:company].blank? && current_company.present?
+      @company = current_user.company
+      @role = :user
+    else
+      @company = Company.new(company_params)
+      @role = :admin
+    end
+  end
 
   def user_params
     # strong parameters - whitelist of allowed fields #=> permit(:name, :email, ...)
@@ -55,5 +58,4 @@ class UsersController < ApplicationController
     # that can be submitted by a form to the user model #=> require(:user)
     params.require(:company).permit(:name, :cnpj)
   end
-  
 end

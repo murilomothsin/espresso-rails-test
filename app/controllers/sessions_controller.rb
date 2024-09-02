@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
   def new
     # No need for anything in here, we are just going to render our
@@ -8,10 +10,10 @@ class SessionsController < ApplicationController
     # Look up User in db by the email address submitted to the login form and
     # convert to lowercase to match email in db in case they had caps lock on:
     user = User.find_by(email: params[:email].downcase)
-    
-    # Verify user exists in db and run has_secure_password's .authenticate() 
-    # method to see if the password submitted on the login form was correct: 
-    if user && user.authenticate(params[:password]) 
+
+    # Verify user exists in db and run has_secure_password's .authenticate()
+    # method to see if the password submitted on the login form was correct:
+    if user&.authenticate(params[:password])
       # Save the user.id in that user's session cookie:
       session[:user_id] = user.id.to_s
       render json: { data: user }, status: :ok
@@ -19,7 +21,7 @@ class SessionsController < ApplicationController
       # if email or password incorrect, re-render login page:
       # flash.now.alert = "Incorrect email or password, try again."
       # render :new
-      render json: { errors: "Credencial inválida!" }, status: :unauthorized
+      render json: { errors: 'Credencial inválida!' }, status: :unauthorized
     end
   end
 

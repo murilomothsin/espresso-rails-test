@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class CategoriesController < ApplicationController
-  before_action :authorize, only: [:index, :create]
+  before_action :authorize, only: %i[index create]
   def index
     @categories = current_company.categories
     respond_to do |format|
@@ -19,6 +21,7 @@ class CategoriesController < ApplicationController
   end
 
   private
+
   def category_params
     params.require(:category).permit(:name)
   end

@@ -1,4 +1,7 @@
-json.extract! statement, :id, :performed_at, :cost, :merchant, :transaction_id, :category_id, :card_id, :archived, :created_at, :updated_at
+# frozen_string_literal: true
+
+json.extract! statement, :id, :performed_at, :cost, :merchant, :transaction_id, :category_id, :card_id, :archived,
+              :created_at, :updated_at
 
 json.has_attachment statement.attachment.attached?
 
