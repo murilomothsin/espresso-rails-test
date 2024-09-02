@@ -34,6 +34,7 @@ const NewUser = () => {
     })
     .then(T => T.json())
     .then(data => {
+      window.location.href = '/login'
     })
   }
 

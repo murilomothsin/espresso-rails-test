@@ -12,12 +12,14 @@ class User < ApplicationRecord
 
   before_save { self.email = email.downcase }
   before_validation :set_password, if: ->(user) { user.password.blank? }
+  after_save { UserMailer.with(user: self, password: @password).welcome_email.deliver_later }
 
   enum role: { user: 0, admin: 1 }
 
   private
 
   def set_password
-    self.password = SecureRandom.hex(4)
+    @password = SecureRandom.hex(4)
+    self.password = @password
   end
 end

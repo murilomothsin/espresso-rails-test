@@ -87,6 +87,7 @@ const Login = (props) => {
               }}/>
             <TextField
               sx={tfStyles}
+              type="password"
               size="small"
               label="Senha"
               value={password}
