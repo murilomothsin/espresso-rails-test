@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(version: 2024_09_02_092745) do
     t.integer "cost"
     t.string "merchant"
     t.string "transaction_id"
-    t.boolean "archived", default: false
+    t.boolean "archived", default: false, null: false
     t.bigint "category_id"
     t.bigint "card_id"
     t.datetime "created_at", null: false
