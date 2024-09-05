@@ -27,7 +27,10 @@ class StatementsController < ApplicationController
   end
 
   def archive
-    return render json: { errors: 'Permissão inválida' }, status: :unprocessable_entity if current_user && current_user.user?
+    if current_user&.user?
+      return render json: { errors: 'Permissão inválida' },
+                    status: :unprocessable_entity
+    end
     begin
       @statement = current_company.statements.find(params[:id])
       @statement.update(archived: true)
@@ -38,19 +41,25 @@ class StatementsController < ApplicationController
   end
 
   def update
-    begin
-      @statement = current_user.admin? ? current_company.statements.find(params[:id]) : current_user.statements.find(params[:id])
-      if @statement.update(statement_update_params)
-        render json:  @statement, status: :created
-      else
-        render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
-      end
-    rescue ActiveRecord::RecordNotFound
-      render json: { errors: 'Statement not found' }, status: :not_found
+    set_statement
+    if @statement.update(statement_update_params)
+      render json: @statement, status: :created
+    else
+      render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: 'Statement not found' }, status: :not_found
   end
 
   private
+
+  def set_statement
+    @statement = if current_user.admin?
+                   current_company.statements.find(params[:id])
+                 else
+                   current_user.statements.find(params[:id])
+                 end
+  end
 
   def statement_params
     params.permit(:merchant, :cost, :transaction_id)

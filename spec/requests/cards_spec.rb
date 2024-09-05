@@ -2,26 +2,29 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Cards', type: :request do
+RSpec.describe 'Cards' do
   let(:company) { Company.create(name: 'asd', cnpj: '123') }
   let!(:user) { User.create(name: 'asd', email: 'asd@asd.com', password: '123456', company: company, role: :admin) }
+
   describe 'GET /index' do
-    before(:each) do
+    before do
       sign_in(user)
     end
-    it "returns cards collection" do
+
+    it 'returns cards collection' do
       get '/cards.json'
 
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)).to include("cards")
-      expect(JSON.parse(response.body)).to include("users")
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('cards')
+      expect(response.parsed_body).to include('users')
     end
   end
 
   describe 'POST /create' do
-    before(:each) do
+    before do
       sign_in(user)
     end
+
     it 'returns http success when valid' do
       post cards_path, params: {
         card: {
@@ -46,9 +49,10 @@ RSpec.describe 'Cards', type: :request do
   end
 
   describe 'GET /update' do
-    before(:each) do
+    before do
       sign_in(user)
     end
+
     it 'returns http success' do
       card = FactoryBot.create(:card)
       put card_path(card.id), params: {
@@ -56,7 +60,7 @@ RSpec.describe 'Cards', type: :request do
       }
 
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body)['last4']).not_to eq(card.last4)
+      expect(response.parsed_body['last4']).not_to eq(card.last4)
     end
 
     it 'fails with invalid data' do

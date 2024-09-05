@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# rubocop:disable all
 
 RSpec::Matchers.define :deliver_later do |expected_method|
   match do |mailer_class|

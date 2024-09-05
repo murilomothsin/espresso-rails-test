@@ -2,28 +2,31 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Categories', type: :request do
+RSpec.describe 'Categories' do
   let(:company) { Company.create(name: 'asd', cnpj: '123') }
   let!(:user) { User.create(name: 'asd', email: 'asd@asd.com', password: '123456', company: company, role: :admin) }
   let!(:category) { FactoryBot.create(:category, company: company) }
   let!(:category_outside_company) { FactoryBot.create(:category) }
+
   describe 'GET /index' do
-    before(:each) do
+    before do
       sign_in(user)
     end
-    it "returns categories collection from the company" do
+
+    it 'returns categories collection from the company' do
       get '/categories.json'
 
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body).size).to eq(1)
-      expect(JSON.parse(response.body).first['id']).to eq(category.id)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.size).to eq(1)
+      expect(response.parsed_body.first['id']).to eq(category.id)
     end
   end
 
   describe 'POST /create' do
-    before(:each) do
+    before do
       sign_in(user)
     end
+
     it 'returns http success when valid' do
       post categories_path, params: {
         category: {
@@ -38,7 +41,7 @@ RSpec.describe 'Categories', type: :request do
     it 'returns http error when invalid' do
       post categories_path, params: {
         category: {
-          name: ""
+          name: ''
         }
       }
 
