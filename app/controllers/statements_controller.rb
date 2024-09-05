@@ -4,7 +4,6 @@ class StatementsController < ApplicationController
   before_action :authorize, only: %i[index update archive]
 
   def index
-    @categories = current_company.categories
     statements_available = current_user.admin? ? current_company.statements : current_user.statements
     @statements = ApplicationController.render(template: 'statements/statements',
                                                assigns: { statements: statements_available })
@@ -21,27 +20,33 @@ class StatementsController < ApplicationController
     @statement.performed_at = params[:created_at]
 
     if @statement.save
-      render json: { data: @statement }, status: :created
+      render json: @statement, status: :created
     else
       render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def archive
-    @statement = Statement.find(params[:id])
-    if @statement.update(archived: true)
-      render json: { data: @statement }, status: :created
-    else
-      render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
+    return render json: { errors: 'Permissão inválida' }, status: :unprocessable_entity if current_user && current_user.user?
+    begin
+      @statement = current_company.statements.find(params[:id])
+      @statement.update(archived: true)
+      render json: @statement, status: :ok
+    rescue ActiveRecord::RecordNotFound
+      render json: { errors: 'Statement not found' }, status: :not_found
     end
   end
 
   def update
-    @statement = Statement.find(params[:id])
-    if @statement.update(statement_update_params)
-      render json: { data: @statement }, status: :created
-    else
-      render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
+    begin
+      @statement = current_user.admin? ? current_company.statements.find(params[:id]) : current_user.statements.find(params[:id])
+      if @statement.update(statement_update_params)
+        render json:  @statement, status: :created
+      else
+        render json: { errors: @statement.errors.full_messages }, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: { errors: 'Statement not found' }, status: :not_found
     end
   end
 

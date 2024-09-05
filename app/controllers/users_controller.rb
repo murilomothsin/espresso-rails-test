@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   def new; end
 
   def create
+    return render json: { errors: 'Permissão inválida' }, status: :unprocessable_entity if current_user && current_user.user?
     ActiveRecord::Base.transaction do
       build_company
       @user = @company.users.new(user_params.merge(role: @role))
@@ -27,11 +28,15 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
-    if @user.update(user_params)
-      render json: { data: @user }, status: :created
-    else
-      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+    begin
+      @user = current_company.users.find(params[:id])
+      if @user.update(user_params)
+        render json: { data: @user }, status: :created
+      else
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
+    rescue ActiveRecord::RecordNotFound
+      render json: { errors: 'User not found' }, status: :not_found
     end
   end
 

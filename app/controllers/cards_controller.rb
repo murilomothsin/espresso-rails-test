@@ -15,7 +15,7 @@ class CardsController < ApplicationController
   def create
     @card = Card.new(card_params)
     if @card.save
-      render json: { data: @card }, status: :created
+      render json: @card, status: :created
     else
       render json: { errors: @card.errors.full_messages }, status: :unprocessable_entity
     end
@@ -24,7 +24,7 @@ class CardsController < ApplicationController
   def update
     @card = Card.find(params[:id])
     if @card.update(card_params)
-      render json: { data: @card }, status: :created
+      render json: @card, status: :created
     else
       render json: { errors: @card.errors.full_messages }, status: :unprocessable_entity
     end
