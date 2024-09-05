@@ -20,6 +20,12 @@ class ApplicationController < ActionController::Base
     return unless current_user.user?
 
     redirect_to login_path unless allowed_controllers.include?(params[:controller])
-    redirect_to login_path if params[:action] == 'archive'
+  end
+
+  def can_perform?
+    return false unless current_user&.user?
+
+    render json: { errors: 'Permissão inválida' },
+           status: :forbidden
   end
 end

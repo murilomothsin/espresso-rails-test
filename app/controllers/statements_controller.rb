@@ -2,6 +2,7 @@
 
 class StatementsController < ApplicationController
   before_action :authorize, only: %i[index update archive]
+  before_action :can_perform?, only: %i[archive]
 
   def index
     statements_available = current_user.admin? ? current_company.statements : current_user.statements
@@ -27,17 +28,11 @@ class StatementsController < ApplicationController
   end
 
   def archive
-    if current_user&.user?
-      return render json: { errors: 'Permissão inválida' },
-                    status: :unprocessable_entity
-    end
-    begin
-      @statement = current_company.statements.find(params[:id])
-      @statement.update(archived: true)
-      render json: @statement, status: :ok
-    rescue ActiveRecord::RecordNotFound
-      render json: { errors: 'Statement not found' }, status: :not_found
-    end
+    @statement = current_company.statements.find(params[:id])
+    @statement.update(archived: true)
+    render json: @statement, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: 'Statement not found' }, status: :not_found
   end
 
   def update

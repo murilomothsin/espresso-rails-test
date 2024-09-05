@@ -21,11 +21,11 @@ RSpec.describe User do
   end
 
   describe 'creates a password' do
-    it 'when no password provided' do
-      subject { FactoryBot.build(:user, password: nil) }
+    let(:user) { FactoryBot.build(:user, password: nil) }
 
-      subject.save
-      expect(subject.password_digest).not_to be_nil
+    it 'when no password provided' do
+      user.save
+      expect(user.password_digest).not_to be_nil
     end
   end
 

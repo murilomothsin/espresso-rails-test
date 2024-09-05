@@ -18,7 +18,8 @@ RSpec.describe 'Categories' do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body.size).to eq(1)
-      expect(response.parsed_body.first['id']).to eq(category.id)
+      expect(response.parsed_body.pluck('id')).to include(category.id)
+      expect(response.parsed_body.pluck('id')).not_to include(category_outside_company.id)
     end
   end
 
@@ -29,9 +30,7 @@ RSpec.describe 'Categories' do
 
     it 'returns http success when valid' do
       post categories_path, params: {
-        category: {
-          name: 'Test'
-        }
+        category: { name: 'Test' }
       }
 
       expect(response).to have_http_status(:success)
@@ -40,9 +39,7 @@ RSpec.describe 'Categories' do
 
     it 'returns http error when invalid' do
       post categories_path, params: {
-        category: {
-          name: ''
-        }
+        category: { name: '' }
       }
 
       expect(response).to have_http_status(:unprocessable_entity)

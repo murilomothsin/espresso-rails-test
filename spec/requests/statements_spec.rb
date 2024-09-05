@@ -10,11 +10,11 @@ RSpec.describe 'Statements' do
 
   describe 'GET /index' do
     context 'when admin user' do
-      let(:card1) { FactoryBot.create(:card, user: user) }
-      let(:card2) { FactoryBot.create(:card, user: another_user) }
+      let(:admin_card) { FactoryBot.create(:card, user: user) }
+      let(:user_card) { FactoryBot.create(:card, user: another_user) }
       let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user) }
-      let!(:statement1) { FactoryBot.create(:statement, card: card1) }
-      let!(:statement2) { FactoryBot.create(:statement, card: card2) }
+      let!(:admin_statement) { FactoryBot.create(:statement, card: admin_card) }
+      let!(:user_statement) { FactoryBot.create(:statement, card: user_card) }
       let!(:statement_from_other_company) { FactoryBot.create(:statement, card: card_from_other_company) }
 
       before do
@@ -26,8 +26,8 @@ RSpec.describe 'Statements' do
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.size).to eq(2)
-        expect(response.parsed_body[0]['id']).to eq(statement1.id)
-        expect(response.parsed_body[1]['id']).to eq(statement2.id)
+        expect(response.parsed_body[0]['id']).to eq(admin_statement.id)
+        expect(response.parsed_body[1]['id']).to eq(user_statement.id)
       end
 
       it 'prevents user from seeing statements from another company' do
@@ -39,11 +39,11 @@ RSpec.describe 'Statements' do
     end
 
     context 'when regular user' do
-      let(:card1) { FactoryBot.create(:card, user: user) }
-      let(:card2) { FactoryBot.create(:card, user: another_user) }
+      let(:admin_card) { FactoryBot.create(:card, user: user) }
+      let(:user_card) { FactoryBot.create(:card, user: another_user) }
       let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user) }
-      let!(:statement1) { FactoryBot.create(:statement, card: card1) }
-      let!(:statement2) { FactoryBot.create(:statement, card: card2) }
+      let!(:admin_statement) { FactoryBot.create(:statement, card: admin_card) }
+      let!(:user_statement) { FactoryBot.create(:statement, card: user_card) }
       let!(:statement_from_other_company) { FactoryBot.create(:statement, card: card_from_other_company) }
 
       before do
@@ -55,7 +55,8 @@ RSpec.describe 'Statements' do
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body.size).to eq(1)
-        expect(response.parsed_body[0]['id']).to eq(statement2.id)
+        expect(response.parsed_body.pluck('id')).to include(user_statement.id)
+        expect(response.parsed_body.pluck('id')).not_to include(admin_statement.id)
       end
 
       it 'prevents user from seeing statements from another company' do
@@ -69,11 +70,9 @@ RSpec.describe 'Statements' do
 
   describe 'PUT /archive' do
     context 'when admin user' do
-      let(:card1) { FactoryBot.create(:card, user: user) }
-      let(:card2) { FactoryBot.create(:card, user: another_user) }
+      let(:user_card) { FactoryBot.create(:card, user: another_user) }
       let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user) }
-      let!(:statement1) { FactoryBot.create(:statement, card: card1) }
-      let!(:statement2) { FactoryBot.create(:statement, card: card2) }
+      let!(:user_statement) { FactoryBot.create(:statement, card: user_card) }
       let!(:statement_from_other_company) { FactoryBot.create(:statement, card: card_from_other_company) }
 
       before do
@@ -81,11 +80,11 @@ RSpec.describe 'Statements' do
       end
 
       it 'can archive statements' do
-        put archive_statement_path(statement2)
+        put archive_statement_path(user_statement)
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body['archived']).to be true
-        expect(Statement.find(statement2.id).archived).to be true
+        expect(Statement.find(user_statement.id).archived).to be true
       end
 
       it 'prevents user from archive statements from another company' do
@@ -96,11 +95,9 @@ RSpec.describe 'Statements' do
     end
 
     context 'when regular user' do
-      let(:card1) { FactoryBot.create(:card, user: user) }
-      let(:card2) { FactoryBot.create(:card, user: another_user) }
+      let(:user_card) { FactoryBot.create(:card, user: another_user) }
       let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user) }
-      let!(:statement1) { FactoryBot.create(:statement, card: card1) }
-      let!(:statement2) { FactoryBot.create(:statement, card: card2) }
+      let!(:user_statement) { FactoryBot.create(:statement, card: user_card) }
       let!(:statement_from_other_company) { FactoryBot.create(:statement, card: card_from_other_company) }
 
       before do
@@ -108,62 +105,42 @@ RSpec.describe 'Statements' do
       end
 
       it "can't archive statements" do
-        put archive_statement_path(statement2)
+        put archive_statement_path(user_statement)
 
-        expect(response).to have_http_status(:found) # status found so the user is redirected to login_page
-        # TODO: Add a better path for blocking user's action
-        expect(Statement.find(statement2.id).archived).to be false
+        expect(response).to have_http_status(:forbidden)
+        expect(Statement.find(user_statement.id).archived).to be false
       end
 
       it 'prevents user from archive statements from another company' do
         put archive_statement_path(statement_from_other_company)
 
-        expect(response).to have_http_status(:found) # status found so the user is redirected to login_page
-        # TODO: Add a better path for blocking user's action
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
 
   describe 'POST /api/baas/webhooks' do
     let(:card1) { FactoryBot.create(:card, user: user, last4: '1234') }
-    let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user, card: '5678') }
+    let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user, last4: '5678') }
 
     before do
       sign_in(user)
     end
 
     it 'can create a statement' do
-      post api_baas_webhooks_path, params: {
-        merchant: 'Uber *UBER *TRIP',
-        cost: 1780,
-        created_at: 3.days.ago,
-        last4: card1.last4,
-        transaction_id: '3e85a730-bb1f-451b-9a39-47c55aa054db'
-      }
+      post api_baas_webhooks_path, params: build_statement_payload(card1.last4)
 
       expect(response).to have_http_status(:created)
     end
 
     it 'can create a statement for another company' do
-      post api_baas_webhooks_path, params: {
-        merchant: 'Uber *UBER *TRIP',
-        cost: 1570,
-        created_at: 3.days.ago,
-        last4: card1.last4,
-        transaction_id: '3e85a730-bb1f-451b-9a39-47c55aa054db'
-      }
+      post api_baas_webhooks_path, params: build_statement_payload(card_from_other_company.last4)
 
       expect(response).to have_http_status(:created)
     end
 
     it 'requires a valid last4 credit card' do
-      post api_baas_webhooks_path, params: {
-        merchant: 'Uber *UBER *TRIP',
-        cost: 1570,
-        created_at: 3.days.ago,
-        last4: '9999',
-        transaction_id: '3e85a730-bb1f-451b-9a39-47c55aa054db'
-      }
+      post api_baas_webhooks_path, params: build_statement_payload('9999')
 
       expect(response).to have_http_status(:unprocessable_entity)
     end
@@ -171,20 +148,20 @@ RSpec.describe 'Statements' do
 
   describe 'PUT /update' do
     context 'when admin user' do
-      let(:card1) { FactoryBot.create(:card, user: user) }
-      let(:card2) { FactoryBot.create(:card, user: another_user) }
+      let(:admin_card) { FactoryBot.create(:card, user: user) }
+      let(:user_card) { FactoryBot.create(:card, user: another_user) }
       let(:card_from_other_company) { FactoryBot.create(:card, user: outside_user) }
-      let!(:statement1) { FactoryBot.create(:statement, card: card1) }
+      let!(:admin_statement) { FactoryBot.create(:statement, card: admin_card) }
       let!(:statement_from_other_company) { FactoryBot.create(:statement, card: card_from_other_company) }
       let(:category) { FactoryBot.create(:category, company: company) }
-      let(:category2) { FactoryBot.create(:category, company: outside_user.company) }
+      let(:outside_category) { FactoryBot.create(:category, company: outside_user.company) }
 
       before do
         sign_in(user)
       end
 
       it "can update category's statement" do
-        put statement_path(statement1), params: {
+        put statement_path(admin_statement), params: {
           statement: { category_id: category.id }
         }
 
@@ -193,18 +170,17 @@ RSpec.describe 'Statements' do
       end
 
       it "can't update category's statement with invalid category id" do
-        put statement_path(statement1), params: {
-          statement: { category_id: category2.id }
+        put statement_path(admin_statement), params: {
+          statement: { category_id: outside_category.id }
         }
 
         expect(response).to have_http_status(:unprocessable_entity)
-        # expect(JSON.parse(response.body)['category_id']).to eq(category.id)
       end
 
       it "can update attachment's statement" do
         file = fixture_file_upload(Rails.public_path.join('apple-touch-icon.png'), 'image/png')
         expect do
-          put statement_path(statement1), params: { statement: { attachment: file } }
+          put statement_path(admin_statement), params: { statement: { attachment: file } }
         end.to change(ActiveStorage::Attachment, :count).by(1)
       end
 

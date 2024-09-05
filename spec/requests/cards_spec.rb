@@ -27,10 +27,7 @@ RSpec.describe 'Cards' do
 
     it 'returns http success when valid' do
       post cards_path, params: {
-        card: {
-          last4: '1234',
-          user_id: user.id
-        }
+        card: { last4: '1234', user_id: user.id }
       }
 
       expect(response).to have_http_status(:success)
@@ -39,9 +36,7 @@ RSpec.describe 'Cards' do
 
     it 'returns http error when invalid' do
       post cards_path, params: {
-        card: {
-          user_id: user.id
-        }
+        card: { user_id: user.id }
       }
 
       expect(response).to have_http_status(:unprocessable_entity)
@@ -53,8 +48,10 @@ RSpec.describe 'Cards' do
       sign_in(user)
     end
 
+    let(:card) { FactoryBot.create(:card) }
+    let(:another_company_card) { FactoryBot.create(:card) }
+
     it 'returns http success' do
-      card = FactoryBot.create(:card)
       put card_path(card.id), params: {
         card: { last4: '1111' }
       }
@@ -64,10 +61,8 @@ RSpec.describe 'Cards' do
     end
 
     it 'fails with invalid data' do
-      card = FactoryBot.create(:card)
-      card2 = FactoryBot.create(:card)
       put card_path(card.id), params: {
-        card: { last4: card2.last4 }
+        card: { last4: another_company_card.last4 }
       }
 
       expect(response).to have_http_status(:unprocessable_entity)

@@ -2,6 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :authorize, only: %i[index update]
+  before_action :can_perform?, only: %i[create]
 
   def index
     @users = current_company.users
@@ -14,11 +15,6 @@ class UsersController < ApplicationController
   def new; end
 
   def create
-    if current_user&.user?
-      return render json: { errors: 'Permissão inválida' },
-                    status: :unprocessable_entity
-    end
-
     ActiveRecord::Base.transaction do
       build_company
       @user = @company.users.new(user_params.merge(role: @role))

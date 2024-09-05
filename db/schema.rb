@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2024_09_02_092745) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["last4"], name: "index_cards_on_last4", unique: true
     t.index ["user_id"], name: "index_cards_on_user_id"
   end
 
@@ -79,6 +80,7 @@ ActiveRecord::Schema.define(version: 2024_09_02_092745) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_users_on_company_id"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
