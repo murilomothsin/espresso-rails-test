@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :category do
-    name { 'MyString' }
-    company { nil }
+    name { FFaker::Color.name }
+    company
   end
 end

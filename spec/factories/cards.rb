@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :card do
-    last4 { 'MyString' }
-    user { nil }
+    last4 { FFaker::Number.number(digits: 4) }
+    user
   end
 end

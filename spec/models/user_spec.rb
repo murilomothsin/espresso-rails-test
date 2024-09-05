@@ -3,13 +3,38 @@
 require 'rails_helper'
 
 RSpec.describe User do
-  subject { user }
+  describe 'associations' do
+    it { is_expected.to belong_to(:company) }
+    it { is_expected.to have_many(:cards) }
+    it { is_expected.to have_many(:statements) }
+  end
 
-  let(:user) { FactoryBot.create(:user) }
+  describe 'validations' do
+    subject { FactoryBot.build(:user) }
 
-  describe '#valid?' do
-    subject { user.valid? }
+    it { is_expected.to validate_presence_of(:email) }
+    it { is_expected.to validate_uniqueness_of(:email) }
+  end
 
-    it { is_expected.to be true }
+  describe 'secure password' do
+    it { is_expected.to have_secure_password }
+  end
+
+  describe 'creates a password' do
+    it 'when no password provided' do
+      subject { FactoryBot.build(:user, password: nil) }
+
+      subject.save
+      expect(subject.password_digest).not_to be_nil
+    end
+  end
+
+  describe 'sends welcome email' do
+    let(:user) { FactoryBot.build(:user) }
+
+    it 'when record is created' do
+      expect(UserMailer).to deliver_later(:welcome_email)
+      user.save
+    end
   end
 end
