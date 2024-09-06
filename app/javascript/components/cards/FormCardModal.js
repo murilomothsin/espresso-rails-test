@@ -70,7 +70,7 @@ export default function FormCardModal(props) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography data-testid="form-card-edit" id="modal-modal-title" variant="h6" component="h2">
           Cadastrar Cartão
         </Typography>
         <Box>
@@ -100,7 +100,7 @@ export default function FormCardModal(props) {
               ))}
             </Select>
           </FormControl>
-            <Button variant="contained" onClick={submit}>Cadastrar</Button>
+            <Button variant="contained" data-testid="submit" onClick={submit}>Cadastrar</Button>
         </Box>
       </Box>
     </Modal>

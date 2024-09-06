@@ -1,11 +1,10 @@
 import React, { useState } from "react"
+import { ReactSVG } from "react-svg";
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import logo from "./logo.svg"
-
 
 const NewUser = () => {
   const [name, setName] = useState("")
@@ -34,7 +33,7 @@ const NewUser = () => {
     })
     .then(T => T.json())
     .then(data => {
-      window.location.href = '/login'
+      window.location.assign('/login')
     })
   }
 
@@ -75,9 +74,9 @@ const NewUser = () => {
     <React.Fragment>
       <Container maxWidth={false} sx={ ContainerStyles }>
         <div style={divContainerStyles}>
-          <img src={logo} style={logoStyles} alt="Expresso logo" />
+          <ReactSVG src="logo.svg" style={logoStyles} />
           <Box component="section" sx={BoxStyles}>
-            <Typography variant="h4" component="h1" align="center">
+            <Typography data-testid="header" variant="h4" component="h1" align="center">
               Criar conta
             </Typography>
             <TextField
@@ -87,11 +86,6 @@ const NewUser = () => {
               value={name}
               onChange={(event) => {
                 setName(event.target.value);
-              }}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
               }}
             />
             <TextField
@@ -126,7 +120,7 @@ const NewUser = () => {
               onChange={(event) => {
                 setCnpj(event.target.value);
               }}/>
-            <Button variant="contained" onClick={submit}>Criar conta</Button>
+            <Button variant="contained" data-testid="submit" onClick={submit}>Criar conta</Button>
           </Box>
         </div>
       </Container>

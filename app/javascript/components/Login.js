@@ -1,20 +1,18 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
+import { ReactSVG } from "react-svg";
 import Container from "@mui/material/Container"
 import Typography from "@mui/material/Typography"
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import logo from "./logo.svg"
-
 
 const Login = (props) => {
-  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const createAccount = () => {
-
+    window.location.assign('/users/new')
   }
 
   const submit = () => {
@@ -29,9 +27,8 @@ const Login = (props) => {
         password: password
       })
     })
-    .then(T => T.json())
     .then(() => {
-      window.location.href = '/statements'
+      window.location.assign('/statements')
     })
   }
 
@@ -72,7 +69,7 @@ const Login = (props) => {
     <React.Fragment>
       <Container maxWidth={false} sx={ ContainerStyles }>
         <div style={divContainerStyles}>
-          <img src={logo} style={logoStyles} alt="Expresso logo" />
+          <ReactSVG src="logo.svg" style={logoStyles} />
           <Box component="section" sx={BoxStyles}>
             <Typography variant="h4" component="h1" align="center">
               Logar no Espresso

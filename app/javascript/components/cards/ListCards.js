@@ -54,7 +54,7 @@ export default function ListCards(props) {
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={users.find((user) => user.id === card.user_id).name} secondary={`**** **** **** ${card.last4}`} />
-            <Button variant="outlined" onClick={() => handlecardUser(card)}>Editar</Button>
+            <Button variant="outlined" data-testid="edit-card" onClick={() => handlecardUser(card)}>Editar</Button>
           </ListItem>
           <Divider component="li" style={{width:'100%'}} />
         </React.Fragment>
@@ -72,7 +72,7 @@ export default function ListCards(props) {
   return (
     <Box sx={ContainerBoxStyles}>
       <Box sx={{display: "flex", width: "inherit", justifyContent: "space-between"}}>
-        <Typography variant="h5" noWrap component="div">
+        <Typography data-testid="header-cards" variant="h5" noWrap component="div">
           Cartões
         </Typography>
         <Button variant="contained" onClick={handleOpen}>Cadastrar Cartão</Button>

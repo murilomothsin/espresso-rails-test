@@ -99,7 +99,7 @@ const Layout = (props) => {
     fetch('/logout', {
       method: "DELETE"
     }).then(() => {
-      window.location.href = '/login'
+      window.location.assign('/login')
     })
   }
 
@@ -108,21 +108,17 @@ const Layout = (props) => {
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton
+          {!open && (<IconButton
             color="inherit"
             aria-label="open drawer"
+            data-testid="drawer-open"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[
-              {
-                mr: 2,
-              },
-              open && { display: 'none' },
-            ]}
+            sx={[{ mr: 2 }]}
           >
             <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          </IconButton>)}
+          <Typography data-testid="header" variant="h6" noWrap component="div">
             Espresso
           </Typography>
 
@@ -138,12 +134,13 @@ const Layout = (props) => {
             </IconButton>
 
             <ListItem disablePadding>
-              <ListItemText primary={props.user.name} secondary={props.user.email} />
+              <ListItemText data-testid="user-identification" primary={props.user.name} secondary={props.user.email} />
             </ListItem>
 
             <IconButton
               size="large"
               color="inherit"
+              data-testid="logout"
               onClick={logout}
             >
               <LogoutIcon />
@@ -165,14 +162,14 @@ const Layout = (props) => {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton data-testid="drawer-close" onClick={handleDrawerClose}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => window.location.href = "/statements"}>
+            <ListItemButton data-testid="statements" onClick={() => window.location.assign("/statements")}>
               <ListItemIcon>
                 <ReceiptIcon />
               </ListItemIcon>
@@ -180,7 +177,7 @@ const Layout = (props) => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => window.location.href = "/users"}>
+            <ListItemButton data-testid="users" onClick={() => window.location.assign("/users")}>
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
@@ -188,7 +185,7 @@ const Layout = (props) => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => window.location.href = "/cards"}>
+            <ListItemButton data-testid="cards" onClick={() => window.location.assign("/cards")}>
               <ListItemIcon>
                 <CreditCardIcon />
               </ListItemIcon>
@@ -196,7 +193,7 @@ const Layout = (props) => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton onClick={() => window.location.href = "/categories"}>
+            <ListItemButton data-testid="categories" onClick={() => window.location.assign("/categories")}>
               <ListItemIcon>
                 <CategoryIcon />
               </ListItemIcon>

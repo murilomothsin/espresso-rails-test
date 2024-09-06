@@ -6,7 +6,7 @@ import ListCards from './ListCards';
 const Cards = (props) => {
   return (
     <Layout user={props.current_user}>
-      <ListCards cards={props.cards} users={props.users} />
+      <ListCards data-testid="list-cards" cards={props.cards} users={props.users} />
     </Layout>
   )
 }
