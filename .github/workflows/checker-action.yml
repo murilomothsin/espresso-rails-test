@@ -63,10 +63,12 @@ jobs:
       run: |
         bundle exec rubocop
 
+    - name: Setup Database
+      run: |
+        RAILS_ENV=test bundle exec rails db:setup
+
     - name: Run RSpec
       run: |
-        bin/rails db:create
-        bin/rails db:schema:load
         bundle exec rspec
 
     - name: Run Jest
