@@ -39,8 +39,7 @@ export default function FormCardModal(props) {
         }
       })
     })
-    .then(T => T.json())
-    .then(data => {
+    .then(() => {
       props.handleClose()
     })
   }
@@ -91,6 +90,7 @@ export default function FormCardModal(props) {
               id="demo-simple-select"
               value={userId || ""}
               label="Funcionário"
+              data-testid="user-select"
               onChange={(event) => {
                 setUserId(event.target.value);
               }}
