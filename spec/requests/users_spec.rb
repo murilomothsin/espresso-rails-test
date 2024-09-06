@@ -67,7 +67,7 @@ RSpec.describe 'Users' do
           user: { name: 'Test', email: 'email@email.com', password: '123456' }
         }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:forbidden)
         expect(User.last.id).to eq(non_admin_user.id)
       end
     end
