@@ -5,9 +5,9 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField'
 
-export default function EditUserModal(props) {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
+export default function FormUserModal(props) {
+  const [name, setName] = useState(props.user.name)
+  const [email, setEmail] = useState(props.user.email)
 
   useEffect(() => {
     setEmail(props.user.email);
@@ -28,7 +28,6 @@ export default function EditUserModal(props) {
         }
       })
     })
-    .then(T => T.json())
     .then(data => {
       props.handleClose()
     })
@@ -59,7 +58,7 @@ export default function EditUserModal(props) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography data-testid="edit-user-modal" id="modal-modal-title" variant="h6" component="h2">
           Editar Funcionário
         </Typography>
         <Box>
@@ -81,7 +80,7 @@ export default function EditUserModal(props) {
             onChange={(event) => {
               setEmail(event.target.value);
             }}/>
-            <Button variant="contained" onClick={submit}>Cadastrar</Button>
+            <Button variant="contained" data-testid="submit" onClick={submit}>Cadastrar</Button>
         </Box>
       </Box>
     </Modal>
