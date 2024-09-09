@@ -63,10 +63,10 @@ export default function ListCategories(props) {
   return (
     <Box sx={ContainerBoxStyles}>
       <Box sx={{display: "flex", width: "inherit", justifyContent: "space-between"}}>
-        <Typography variant="h5" noWrap component="div">
+        <Typography data-testid="header-categories" variant="h5" noWrap component="div">
           Categorias
         </Typography>
-        <Button variant="contained" onClick={handleOpen}>Cadastrar Categoria</Button>
+        <Button variant="contained" data-testid="new-category" onClick={handleOpen}>Cadastrar Categoria</Button>
       </Box>
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
         {listCategories()}

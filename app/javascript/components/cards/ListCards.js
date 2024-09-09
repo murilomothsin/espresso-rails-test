@@ -47,7 +47,7 @@ export default function ListCards(props) {
     return (
       cards.map((card) => (
         <React.Fragment key={card.id}>
-          <ListItem >
+          <ListItem data-testid={card.last4} >
             <ListItemAvatar>
               <Avatar>
                 <CreditCardIcon />
