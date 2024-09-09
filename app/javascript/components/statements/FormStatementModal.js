@@ -55,7 +55,7 @@ export default function FormStatementModal(props) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography data-testid="form-statement" id="modal-modal-title" variant="h6" component="h2">
           Editar Despesa
         </Typography>
         <Box>
@@ -85,7 +85,7 @@ export default function FormStatementModal(props) {
               ))}
             </Select>
           </FormControl>
-          <Button variant="contained" onClick={submit}>Cadastrar</Button>
+          <Button data-testid="submit" variant="contained" onClick={submit}>Cadastrar</Button>
         </Box>
       </Box>
     </Modal>

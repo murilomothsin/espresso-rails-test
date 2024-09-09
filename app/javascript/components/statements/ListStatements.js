@@ -60,7 +60,7 @@ export default function ListStatements(props) {
       display: 'flex',
       renderCell: (params) => (
         <React.Fragment>
-          <Avatar>
+          <Avatar data-testid={params.row.id}>
             <ReceiptIcon />
           </Avatar>
           {params.value}
@@ -82,7 +82,7 @@ export default function ListStatements(props) {
       width: 150,
       renderCell: (params) => (
         params.row.has_attachment ?
-        (<Chip label="Comprovada" color="success" />) :
+        (<Chip data-testid="proved-chip" label="Comprovada" color="success" />) :
         (<Chip label="Não comprovada" />)
       ),
     },
@@ -107,7 +107,7 @@ export default function ListStatements(props) {
       display: 'flex',
       renderCell: (params) => (
         <React.Fragment>
-          <IconButton onClick={() => edit(params.row)}>
+          <IconButton data-testid="edit-statement" onClick={() => edit(params.row)}>
             <EditIcon />
           </IconButton>
         </React.Fragment>
@@ -133,7 +133,7 @@ export default function ListStatements(props) {
   return (
     <Box sx={ContainerBoxStyles}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange}>
+        <Tabs data-testid="header-statements" value={value} onChange={handleChange}>
           <Tab label="Lista" />
           <Tab label="Arquivadas" />
         </Tabs>

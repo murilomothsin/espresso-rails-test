@@ -50,7 +50,7 @@ export default function ListStatementsAdmin(props) {
       display: 'flex',
       renderCell: (params) => (
         <React.Fragment>
-          <Avatar>
+          <Avatar data-testid={params.row.id}>
             <ReceiptIcon />
           </Avatar>
           {params.value}
@@ -97,7 +97,7 @@ export default function ListStatementsAdmin(props) {
       display: 'flex',
       renderCell: (params) => (
         <React.Fragment>
-          <IconButton onClick={() => archive(params.row)}>
+          <IconButton data-testid="archive" onClick={() => archive(params.row)}>
             <ArchiveIcon />
           </IconButton>
         </React.Fragment>
@@ -109,7 +109,6 @@ export default function ListStatementsAdmin(props) {
     fetch(`/statements/${statement.id}/archive`, {
       method: 'PUT',
     })
-    .then(T => T.json())
     .then(data => {
       loadStatements()
     })
@@ -128,7 +127,7 @@ export default function ListStatementsAdmin(props) {
   return (
     <Box sx={ContainerBoxStyles}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange}>
+        <Tabs data-testid="header-statements" value={value} onChange={handleChange}>
           <Tab label="Lista" />
           <Tab label="Arquivadas" />
         </Tabs>
