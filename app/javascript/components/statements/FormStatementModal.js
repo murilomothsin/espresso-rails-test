@@ -74,6 +74,7 @@ export default function FormStatementModal(props) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
+              data-testid="category-select"
               value={categoryId || ""}
               label="Categoria"
               onChange={(event) => {

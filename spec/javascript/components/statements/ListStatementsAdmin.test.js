@@ -21,6 +21,16 @@ describe("ListStatementsAdmin", () => {
       expect(component.getByTestId('header-statements')).toBeInTheDocument()
   })
 
+  it('change tabs correctly', async() => {
+    const component = render(<ListStatementsAdmin statements={[statement]} />)
+    const tab = component.getByTestId('archived-tab')
+    await userEvent.click(tab);
+    await waitFor(() => {
+      expect(component.getByTestId('archived-grid')).toBeInTheDocument()
+      expect(component.queryByTestId('full-grid')).not.toBeInTheDocument()
+    })
+  })
+
   it("archive statement", async () => {
     window.fetch = jest.fn(() => Promise.resolve({
       ok: true,

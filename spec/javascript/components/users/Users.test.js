@@ -5,6 +5,7 @@ import "@testing-library/jest-dom";
 
 describe("Users", () => {
   const user = {
+    id: 1,
     name: "John Doe",
     email: "johndoe@example.com",
     role: "admin"

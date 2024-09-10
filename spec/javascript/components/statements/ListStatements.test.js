@@ -26,6 +26,16 @@ describe("ListStatements", () => {
       expect(component.getByTestId('header-statements')).toBeInTheDocument()
   })
 
+  it('change tabs correctly', async() => {
+    const component = render(<ListStatements statements={[statement]} categories={[category]} />)
+    const tab = component.getByTestId('archived-tab')
+    await userEvent.click(tab);
+    await waitFor(() => {
+      expect(component.getByTestId('archived-grid')).toBeInTheDocument()
+      expect(component.queryByTestId('full-grid')).not.toBeInTheDocument()
+    })
+  })
+
   it('open edit modal', async() => {
     const component = render(<ListStatements statements={[statement]} categories={[category]} />)
     const button = component.getByTestId('edit-statement')

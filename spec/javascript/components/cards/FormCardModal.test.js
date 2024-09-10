@@ -23,10 +23,10 @@ describe("FormCardModal", () => {
   })
 
   it('fullfil last4 input', () => {
-    const component = render(<FormCardModal card={card} users={[user]} open handleClose={() => true } handleOpen={() => true } />)
+    const component = render(<FormCardModal open card={{}} users={[user]} handleClose={() => true} handleOpen={() => true} />)
     const input = component.getByLabelText('Número')
-    fireEvent.change(input, {target: {value: '1234'}})
-    expect(input.value).toBe('1234')
+    fireEvent.change(input, {target: {value: 'teste'}})
+    expect(input.value).toBe('teste')
   })
 
   it("should display options", async () => {
@@ -37,7 +37,6 @@ describe("FormCardModal", () => {
     expect(
       await screen.findByRole("option", { name: "John Doe" }),
     ).toBeInTheDocument();
-    // expect(screen.getByRole("option", { name: "Su" })).toBeInTheDocument();
   });
 
   it("should display selected user", async () => {

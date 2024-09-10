@@ -135,11 +135,12 @@ export default function ListStatements(props) {
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs data-testid="header-statements" value={value} onChange={handleChange}>
           <Tab label="Lista" />
-          <Tab label="Arquivadas" />
+          <Tab label="Arquivadas" data-testid="archived-tab" />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <DataGrid
+          data-testid="full-grid"
           rows={statements.filter((statement) => !statement.archived)}
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
@@ -150,7 +151,8 @@ export default function ListStatements(props) {
         />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-      <DataGrid
+        <DataGrid
+          data-testid="archived-grid"
           rows={statements.filter((statement) => statement.archived)}
           columns={columns.slice(0, -1)}
           initialState={{ pagination: { paginationModel } }}
