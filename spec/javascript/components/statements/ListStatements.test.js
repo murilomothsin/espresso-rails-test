@@ -56,6 +56,8 @@ describe("ListStatements", () => {
     expect(component.getByTestId('form-statement')).toBeInTheDocument()
     const submit_btn = component.getByTestId('submit')
     await userEvent.click(submit_btn);
-    expect(component.getByTestId('proved-chip')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(component.getByTestId('proved-chip')).toBeInTheDocument()
+    })
   });
 })
